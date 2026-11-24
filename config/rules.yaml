@@ -1,0 +1,77 @@
+# How the system reacts. Each event adds engagement points and fires actions.
+# Opens are deliberately weak: Apple Mail Privacy Protection pre-fetches images, so a single
+# "open" is noise. Clicks, scans and replies are signal.
+
+engagement_points:
+  email_open: 2
+  link_click: 15
+  qr_scan: 20
+  linkedin_accept: 5
+  linkedin_reply: 20
+  pricing_page_visit: 15
+  call_gatekeeper: 5
+  reply_referral: 10
+  reply_has_materials: 8
+
+sales_ready:
+  engagement_threshold: 35          # with fit tier A or B
+  eligible_tiers: [A, B]
+  multi_thread_contacts: 2          # distinct people who clicked, scanned or replied
+  instant_triggers: [reply_positive, call_interested]
+
+hot_opens:
+  count: 3
+  window_days: 2
+
+reactions:
+  email_open:
+    - when: hot_opens
+      do: [pull_forward_call]
+      why: "3+ opens in 48h. Opens alone are unreliable, so the move is a human call, not another email."
+  link_click:
+    - do: [send:on_click, task:call_next_business_day, skip:email_2_bump]
+      why: "They looked at the sample. Answer while it is fresh and switch to a person."
+  qr_scan:
+    - do: [send:on_qr, notify_ae_if_ready]
+      why: "The printed packet reached the office and someone acted on it."
+  linkedin_accept:
+    - do: [unlock:li_message]
+      why: "Connection accepted, so the Day 9 LinkedIn message is allowed."
+  linkedin_reply:
+    - do: [task:reply_personally]
+      why: "A human replied on LinkedIn. A human answers."
+  pricing_page_visit:
+    - do: [task:call_next_business_day]
+      why: "Buying-intent page view."
+  reply_positive:
+    - do: [stop_sequence, mark_sales_ready, draft:ae_handoff]
+      why: "Explicit interest. Stop automation and hand to a human within one business day."
+  reply_referral:
+    - do: [add_contact, send:referral_intro]
+      why: "Pointed to the right person. Thread them in with the referrer's name; that borrowed trust is the strongest asset we have."
+  reply_has_materials:
+    - do: [send:objection_has_materials, pause:5]
+      why: "Objection, not a no. Answer it once, then give space."
+  reply_not_now:
+    - do: [send:not_now_ack, stop_sequence, snooze:60]
+      why: "Timing objection. Respect it, come back when they said."
+  reply_unsubscribe:
+    - do: [stop_sequence, suppress]
+      why: "No means no, across every channel."
+  out_of_office:
+    - do: [shift_schedule]
+      why: "Nobody is reading. Move the rest of the sequence to after their return date."
+  bounce:
+    - do: [mark_email_invalid, task:call_next_business_day]
+      why: "Email is dead. Switch to phone and mail, and re-enrich the contact."
+  call_gatekeeper:
+    - do: [add_contact]
+      why: "Got a name from the front desk. Add them as a contact."
+  call_interested:
+    - do: [stop_sequence, mark_sales_ready, draft:ae_handoff]
+      why: "Live interest on the phone."
+
+silence:
+  # Evaluated whenever a step comes due and nothing has happened since the last touch.
+  on_step_due: "escalate"           # the next step is usually a different channel by design
+  on_sequence_end: [nurture, "recycle:90"]

@@ -1,0 +1,19 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Re: Chinese + English home blood-pressure sheet for Dr. Chan's
+ patients
+Date: Mon, 23 Nov 2026 22:52:25 -0800
+X-Intended-Recipient: Samuel Chan <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-8D0A93
+X-FlocCare-Step: email_2_bump
+X-FlocCare-Day: 5
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Chan, the full Chinese version is ready if you want it. Reply "yes" and I=
+'ll send the print-ready file, or have a look first: https://github.com/xbart=
+lett1361/floccare-gtm-engine/blob/main/samples/home-blood-pressure.md?ref=3D8=
+d0a93-e2
+
+Xander Bartlett

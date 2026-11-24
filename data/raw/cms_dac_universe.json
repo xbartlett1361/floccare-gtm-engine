@@ -1,0 +1,35 @@
+{
+  "source": "CMS Doctors and Clinicians National Downloadable File (dataset mj5m-pzi6), queried 2026-11-23 via data.cms.gov provider-data API",
+  "filter": "pri_spec = CARDIOVASCULAR DISEASE (CARDIOLOGY); NYC ZIP ranges",
+  "distinct_practice_sites_adrs_id": {
+    "zip_100_104_manhattan_bronx_staten_island": 304,
+    "zip_111_114_queens_brooklyn": 373
+  },
+  "cardiology_listings_manhattan_only": 1455,
+  "health_system_groups": {
+    "_note": "Groups excluded from the clinic-level pull because buying is centralized (enterprise motion). Value = cardiology clinician-address listings.",
+    "2264691070": {"name": "ICAHN SCHOOL OF MEDICINE AT MOUNT SINAI", "members": 2860, "rows_100_104": 195, "rows_111_116": 29},
+    "1355232422": {"name": "NEW YORK UNIVERSITY (NYU LANGONE)", "members": 6239, "rows_100_104": 744, "rows_111_116": 258},
+    "8527972546": {"name": "TRUSTEES OF COLUMBIA UNIVERSITY", "members": 2317, "rows_100_104": 132, "rows_111_116": 0},
+    "3779496021": {"name": "MONTEFIORE MEDICAL CENTER", "members": 2847, "rows_100_104": 113, "rows_111_116": 0},
+    "3375701568": {"name": "NORTH SHORE-LIJ MEDICAL PC (NORTHWELL)", "members": 6483, "rows_100_104": 96, "rows_111_116": 55},
+    "6800709023": {"name": "WEILL MEDICAL COLLEGE OF CORNELL", "members": 2073, "rows_100_104": 83, "rows_111_116": 0},
+    "7618955667": {"name": "CHS PHYSICIAN PARTNERS PC (CATHOLIC HEALTH)", "members": 748, "rows_100_104": 0, "rows_111_116": 88},
+    "4082883673": {"name": "NEW YORK QUEENS MEDICINE AND SURGERY PC (NYP QUEENS)", "members": 404, "rows_100_104": 3, "rows_111_116": 39},
+    "8527960533": {"name": "TJH MEDICAL SERVICES PC (JAMAICA HOSPITAL)", "members": 219, "rows_100_104": 0, "rows_111_116": 35},
+    "0547579427": {"name": "KINGS PHYSICIAN SERVICES PC (ONE BROOKLYN HEALTH)", "members": 653, "rows_100_104": 0, "rows_111_116": 31},
+    "8224282926": {"name": "ICAHN SCHOOL OF MEDICINE AT MOUNT SINAI (QUEENS)", "members": 323, "rows_100_104": 0, "rows_111_116": 27},
+    "8921999087": {"name": "NORTH SHORE MEDICAL GROUP OF MOUNT SINAI", "members": 332, "rows_100_104": 0, "rows_111_116": 24},
+    "4688814809": {"name": "MAIMONIDES CARDIOLOGY FPP", "members": 42, "rows_100_104": 0, "rows_111_116": 24},
+    "9931378171": {"name": "INTERFAITH PROFESSIONAL PHYSICIAN SERVICES", "members": 385, "rows_100_104": 0, "rows_111_116": 16},
+    "4183515836": {"name": "ST FRANCIS CARDIAC PREVENTION SERVICES (NASSAU)", "members": 61, "rows_100_104": 0, "rows_111_116": 16},
+    "4688098833": {"name": "PHYSICIAN AFFILIATE GROUP OF NEW YORK (NYC H+H)", "members": 1234, "rows_100_104": 10, "rows_111_116": 13},
+    "3072798941": {"name": "SBH PHYSICIANS PC", "members": 176, "rows_100_104": 13, "rows_111_116": 0},
+    "1850281916": {"name": "TBHC MEDICAL SERVICES PC (BROOKLYN HOSPITAL CENTER)", "members": 32, "rows_100_104": 0, "rows_111_116": 11},
+    "3870404429": {"name": "BRONXCARE HEALTH SYSTEM", "members": 343, "rows_100_104": 10, "rows_111_116": 0},
+    "2264324334": {"name": "JAMAICA HOSPITAL", "members": 256, "rows_100_104": 0, "rows_111_116": 10},
+    "4981515699": {"name": "NYU LANGONE HOSPITALS", "members": 249, "rows_100_104": 4, "rows_111_116": 10},
+    "0749192284": {"name": "UNIVERSITY PHYSICIANS OF BROOKLYN (SUNY)", "members": 177, "rows_100_104": 0, "rows_111_116": 9},
+    "other_hospital_affiliated": {"rows_100_104": 41, "rows_111_116": 66}
+  }
+}

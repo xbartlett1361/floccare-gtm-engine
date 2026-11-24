@@ -1,0 +1,108 @@
+# FlocCare GTM engine: NYC cardiology
+# Everything tunable lives here, in sequence.yaml and in rules.yaml. No logic changes needed to re-target.
+
+campaign:
+  name: "FlocCare NYC Cardiology: trust-first outbound"
+  specialty: cardiology
+  cms_specialty_filter: "CARDIOVASCULAR DISEASE (CARDIOLOGY)"
+  nppes_taxonomy_filter: "Cardiovascular Disease"
+  geography: "New York City (5 boroughs)"
+  zip_ranges: [["100000000", "104999999"], ["111000000", "114999999"], ["116000000", "116999999"]]
+  launch_date: "2026-12-01"          # Day 0 of the simulated campaign
+  monthly_cohort_size: 75             # accounts worked up in full each month (the deliverable)
+  sender:
+    name: "Xander Bartlett"
+    title: "GTM, FlocCare"
+    phone: "(555) 010-0175"           # placeholder; swap for a real tracked number
+    signature_url: "floccare.ai"
+    postal_footer: "FlocCare, 103 Penang Rd, Singapore 238467"
+  links:
+    # Demo: links open the sample handouts in this repo (samples/). Production: a tracked short link
+    # per account + channel (Dub/Bitly) to the branded, translated, clinician-reviewed asset.
+    sample_base: "https://github.com/xbartlett1361/floccare-gtm-engine/blob/main/samples"
+    case_study: "https://www.floccare.ai/hypertension-cvd-case"
+    calendar: "https://calendly.com/floccare/onboarding25min"
+
+# ---------------------------------------------------------------------------
+# GUARDRAIL: nothing goes to a real prospect. Enforced in engine/outbox.py and tested in tests/.
+# ---------------------------------------------------------------------------
+guardrail:
+  mode: "local_outbox"                # local_outbox | smtp_sandbox (e.g. Mailtrap) | gmail_drafts
+  test_inbox: "floccare-test-inbox@example.com"   # override locally with env FLOCCARE_TEST_INBOX
+  outbox_dir: "output/outbox"
+  subject_prefix: "[TEST] "
+  # Any recipient that is not the test inbox is rewritten to the test inbox and recorded in
+  # an X-Intended-Recipient header. smtp_sandbox mode refuses to start unless the SMTP host
+  # is on this allowlist.
+  smtp_host_allowlist: ["sandbox.smtp.mailtrap.io", "localhost", "127.0.0.1"]
+
+# ---------------------------------------------------------------------------
+# PRIORITIZATION: 100-point model. See README "Scoring logic" for the defense of each weight.
+# ---------------------------------------------------------------------------
+scoring:
+  fit:            # max 35: can they buy, and does the product fit how they work?
+    segment:
+      independent_cardiology: 15
+      community_health_center: 11
+      independent_multispecialty: 9
+      large_multispecialty: 5
+    cardiologists:  # people seeing cardiology patients at the account
+      "1": 5
+      "2-3": 9
+      "4-9": 12
+      "10-20": 10
+      "21+": 6
+    sites:
+      "1": 0
+      "2": 5
+      "3+": 8
+  need:           # max 35: how much does patient education hurt here?
+    lep_households_pct:   # limited-English households at the primary site ZIP (ACS 2020-24)
+      - [30, 20]
+      - [20, 16]
+      - [12, 11]
+      - [6, 6]
+      - [0, 2]
+    service_line:
+      rhythm: 10
+      prevention: 9
+      heart_vascular: 8
+      general: 7
+      cardiometabolic: 6
+    language_hook_bonus: 5          # one non-English language group >= 15% of households
+  timing:         # max 10: adoption propensity
+    recent_trained_share:            # share of cardiologists who finished school in 2010 or later
+      - [0.5, 10]
+      - [0.01, 6]
+      - [0.0, 3]
+  reach:          # max 20: can we actually start a trusted conversation?
+    decision_maker:
+      registry_named: 10            # NPPES authorized official with an owner/operations title
+      inferred: 6                   # inferred from entity name or seniority
+      unknown: 2
+    champion:
+      named_distinct: 5
+      same_as_dm: 3
+      unknown: 0
+    direct_phone: 5
+
+tiers:
+  A: 70
+  B: 55
+  # below B -> C
+
+# ---------------------------------------------------------------------------
+# FUNNEL: assumptions are explicit so they can be argued with and re-run.
+# ---------------------------------------------------------------------------
+funnel:
+  target_first_conversations_per_month: 75
+  sequence_length_days: 21
+  p_conversation_by_tier:     # P(first live conversation with a decision-maker or champion) over one full sequence
+    A: 0.20
+    B: 0.11
+    C: 0.04
+  p_conversation_health_system_site: 0.05   # site-level champion play, routed to enterprise
+  recycle_after_days: 90
+  recycle_multiplier: 0.5                   # a second pass converts at half the rate
+  referral_rate_per_conversation: 0.15      # warm intros generated per converted clinic
+  p_conversation_referral: 0.35

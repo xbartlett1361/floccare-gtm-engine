@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlocCare NYC Cardiology Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE work: a GTM ops console a hiring team can audit in a Loom
+   IDEA a cardiac telemetry strip: each prospect is a lead on ECG paper; signals spike, touches tick
+   PICTURE eight demo prospects drawn as lanes across Day -7..25 on ECG grid, outcome at each lane's end
+   COLOUR white / ECG pink grid, near-black trace ink, monitor red for signals + sales-ready, slate blue for touches
+   TYPE IBM Plex Sans Condensed for figures and labels, IBM Plex Sans for text
+   LAYOUT title + figures over the strip; tabs: overview, clinics, demo log, simulator, method. Phone stacks. */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#121014);--ink:light-dark(#17171a,#f2eeee);--mut:light-dark(#625d63,#aaa3a9);--g1:light-dark(#fbe4e4,#2a1b1f);--g2:light-dark(#f2bcbc,#4a262d);--red:light-dark(#c8102e,#ff5d70);--blue:light-dark(#1f3f73,#8db0ff);--pan:light-dark(#fbf8f8,#1a1619);--line:light-dark(#e8dfdf,#30282c);--chip:light-dark(#f3eded,#252024)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,.c{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",sans-serif}
+h1{font-size:clamp(30px,4.2vw,46px);line-height:1.05;letter-spacing:-.02em;margin:0 0 10px;text-wrap:balance;font-weight:700}
+h2{font-size:26px;line-height:1.1;margin:0 0 12px;font-weight:700}
+h3{font-size:18px;margin:18px 0 8px;font-weight:600}
+a{color:var(--blue)}
+.band{padding:clamp(22px,3.5vw,48px) max(4vw,16px)}
+.ecg{background-color:var(--bg);background-image:linear-gradient(var(--g2) 1px,transparent 1px),linear-gradient(90deg,var(--g2) 1px,transparent 1px),linear-gradient(var(--g1) 1px,transparent 1px),linear-gradient(90deg,var(--g1) 1px,transparent 1px);background-size:50px 50px,50px 50px,10px 10px,10px 10px}
+.wrap{max-width:1240px;margin:0 auto}
+.lede{max-width:72ch;margin:0 0 18px;color:var(--ink)}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(9.5em,1fr));gap:10px;margin:18px 0 8px}
+.fg{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.fg b{display:block;font:700 clamp(26px,3vw,34px)/1 "IBM Plex Sans Condensed",sans-serif}
+.fg span{font-size:13px;color:var(--mut)}
+.fig{position:relative;min-height:420px;background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--line);border-radius:6px}
+.fig>svg{position:absolute;inset:0;width:100%;height:100%}
+svg text{font:13px "IBM Plex Sans Condensed",sans-serif;fill:var(--ink);paint-order:stroke;stroke:var(--bg);stroke-width:4px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 max(4vw,16px)}
+nav a{flex:none;padding:12px 14px;text-decoration:none;color:var(--mut);font:600 15px "IBM Plex Sans Condensed",sans-serif;border-bottom:3px solid transparent}
+nav a.on{color:var(--ink);border-color:var(--red)}
+section[data-v]{display:none}section[data-v].on{display:block}
+.grid2{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+@media(max-width:900px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.pan{background:var(--pan);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font:600 13px "IBM Plex Sans Condensed",sans-serif;color:var(--mut);border-bottom:1px solid var(--line);padding:8px 6px}
+td{border-bottom:1px solid var(--line);padding:8px 6px;vertical-align:top}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.pick{cursor:pointer}tr.pick:hover{background:var(--chip)}tr.sel{background:color-mix(in srgb,var(--red) 10%,transparent)}
+.tier{display:inline-block;min-width:22px;text-align:center;border-radius:4px;font:700 13px "IBM Plex Sans Condensed",sans-serif;padding:1px 5px;color:#fff;background:var(--blue)}
+.tier.A{background:var(--red)}
+.sbar{display:flex;height:10px;border-radius:3px;overflow:hidden;background:var(--chip);width:120px}
+.sbar i{display:block;height:100%}
+.k1{background:var(--red)}.k2{background:var(--blue)}.k3{background:#9a8f99}.k4{background:color-mix(in srgb,var(--red) 45%,var(--bg))}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--mut);margin:8px 0}
+.legend i{display:inline-block;width:12px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+input,select,button{font:16px "IBM Plex Sans",sans-serif}
+input[type=search],select{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:9px 10px;min-height:44px}
+button{min-height:40px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:6px 12px;cursor:pointer}
+button:hover{border-color:var(--ink)}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid color-mix(in srgb,var(--red) 50%,transparent);outline-offset:2px}
+button.pri{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+.msg{white-space:pre-wrap;font-size:14px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px;margin:8px 0}
+.meta{font-size:13px;color:var(--mut)}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tabs button{font-size:14px;min-height:36px}.tabs button.on{background:var(--ink);color:var(--bg)}
+.log{list-style:none;margin:0;padding:0;max-height:440px;overflow:auto}
+.log li{display:grid;grid-template-columns:3.2em 6.5em minmax(0,1fr);gap:8px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+.log .d{font:600 13px "IBM Plex Sans Condensed",sans-serif;color:var(--mut);text-align:right}
+.kind{font:600 12px "IBM Plex Sans Condensed",sans-serif;border-radius:4px;padding:1px 6px;background:var(--chip);height:fit-content;width:fit-content}
+.kind.event{background:color-mix(in srgb,var(--red) 16%,var(--bg));color:var(--red)}
+.kind.surface{background:var(--red);color:#fff}
+.kind.touch{background:color-mix(in srgb,var(--blue) 14%,var(--bg));color:var(--blue)}
+.meter{height:14px;background:var(--chip);border-radius:7px;position:relative;overflow:hidden}
+.meter i{position:absolute;inset:0 auto 0 0;background:var(--red);transition:width .3s}
+.meter b{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+.steps{list-style:none;margin:0;padding:0;font-size:14px}
+.steps li{display:grid;grid-template-columns:3.2em 7em minmax(0,1fr) auto;gap:8px;padding:5px 0;border-bottom:1px solid var(--line)}
+.st{font:600 12px "IBM Plex Sans Condensed",sans-serif;color:var(--mut)}
+.st.sent{color:var(--blue)}.st.skipped,.st.cancelled{text-decoration:line-through}
+.status{font:700 20px "IBM Plex Sans Condensed",sans-serif}
+.bars .r{display:grid;grid-template-columns:minmax(9em,15em) minmax(0,1fr) 4em;gap:10px;align-items:center;margin:6px 0;font-size:14px}
+.bars .t{height:18px;background:var(--chip);border-radius:3px;overflow:hidden}.bars .t i{display:block;height:100%;background:var(--blue)}
+.note{font-size:13px;color:var(--mut)}
+@media(prefers-reduced-motion:reduce){.meter i{transition:none}}
+@media(max-width:600px){table{font-size:13px}th,td{padding:6px 4px}.hide-s{display:none}.log li{grid-template-columns:2.6em minmax(0,1fr)}.log li .kind{display:none}.steps li{grid-template-columns:2.6em minmax(0,1fr) auto}.steps li .ch{display:none}}
+</style>
+</head>
+<body>
+<header class="band ecg">
+  <div class="wrap">
+    <h1 id="ttl">75 NYC cardiology practices, scored and in sequence. Zero messages sent to a real clinic.</h1>
+    <p class="lede" id="lede">FlocCare GTM engine for one specialty in one city: it sources every Medicare-billing cardiology practice in the five boroughs from public registries, scores each one, writes a trust-first sequence in its patients' languages, reacts to every open, click, reply or silence, and flags who is ready for a sales call and why.</p>
+    <div class="figs" id="figs"></div>
+    <div class="legend"><span><i style="background:var(--blue)"></i>touch (email, call, mail, LinkedIn)</span><span><i style="background:var(--red)"></i>prospect signal</span><span><b style="color:var(--red)">&#9679;</b> sales-ready &nbsp; &#9675; nurture / snoozed &nbsp; &times; suppressed</span></div>
+    <div class="fig" id="strip" role="img" aria-label="Eight demo prospects across Day -7 to 25"></div>
+    <p class="note">Each lane is a scripted prospect from the reaction demo, run through the real engine. Click a lane for its full log.</p>
+  </div>
+</header>
+<nav><div class="wrap" id="nav"><a href="#overview">Overview</a><a href="#clinics">The 75 clinics</a><a href="#demo">Reaction demo</a><a href="#simulator">Try it: simulator</a><a href="#method">Method & funnel</a></div></nav>
+
+<section data-v="overview" class="band"><div class="wrap grid2">
+  <div>
+    <h2>How the system runs</h2>
+    <table><tbody id="pipe"></tbody></table>
+    <h3>Guardrail</h3>
+    <p>Every email is built with the test inbox as the only recipient; the clinic's address only appears in an <code>X-Intended-Recipient</code> header. A second check refuses any message with another To, Cc or Bcc, and network sending only runs against an allowlisted sandbox. Five tests in the repo prove it. Test inbox: <code id="ti"></code></p>
+  </div>
+  <div>
+    <h2 id="fttl">The whole NYC cardiology market is under one month of target</h2>
+    <div class="bars" id="fbars"></div>
+    <p id="fverdict"></p>
+  </div>
+</div></section>
+
+<section data-v="clinics" class="band"><div class="wrap">
+  <h2>The 75 clinics, ranked</h2>
+  <div class="legend"><span><i class="k1"></i>Fit /35</span><span><i class="k2"></i>Need /35</span><span><i class="k3"></i>Timing /10</span><span><i class="k4"></i>Reach /20</span></div>
+  <input type="search" id="q" placeholder="Search practice, neighborhood, language, person" aria-label="Search clinics" style="width:min(100%,420px)">
+  <div class="grid2" style="margin-top:14px">
+    <div class="scroll"><table><thead><tr><th class="n">#</th><th>Practice</th><th>Tier</th><th class="n">Score</th><th class="hide-s">Breakdown</th><th class="hide-s">Area / language</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="pan" id="detail"></div>
+  </div>
+</div></section>
+
+<section data-v="demo" class="band"><div class="wrap">
+  <h2>Reaction demo: eight behaviors, what the system did next</h2>
+  <p class="note">Deterministic run of the engine (<code>python run.py</code>). Every email in it went to the test inbox.</p>
+  <div class="tabs" id="dtabs"></div>
+  <div class="pan"><div id="dhead"></div><ul class="log" id="dlog"></ul></div>
+  <h3 id="cttl"></h3><p id="ctext"></p>
+</div></section>
+
+<section data-v="simulator" class="band"><div class="wrap">
+  <h2>Simulator: be the prospect</h2>
+  <p class="lede">Pick a clinic, move the clock, and fire events. The page runs the same rules as the engine (<code>config/rules.yaml</code>) and shows the decision, the next steps and the message it would send.</p>
+  <div class="btns" style="align-items:center;margin-bottom:10px"><select id="sacc" aria-label="Clinic"></select><button id="sreset">Reset</button></div>
+  <div class="grid2">
+    <div class="pan">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline"><div><span class="meta">Status</span><div class="status" id="sstat"></div></div><div><span class="meta">Day</span><div class="status" id="sday"></div></div></div>
+      <div class="meta" style="margin-top:8px">Engagement <span id="seng"></span> (sales-ready at 35 on Tier A/B)</div>
+      <div class="meter"><i id="smeter"></i><b id="sthr"></b></div>
+      <h3>Clock</h3>
+      <div class="btns"><button id="d1">+1 day (silence)</button><button id="d3">+3 days</button><button id="dend">Run to Day 25</button></div>
+      <h3>Prospect does something today</h3>
+      <div class="btns" id="evb"></div>
+      <h3>Last thing the system sent</h3>
+      <div id="slast" class="meta">Nothing yet.</div>
+    </div>
+    <div>
+      <div class="pan"><h3 style="margin-top:0">Plan</h3><ul class="steps" id="ssteps"></ul></div>
+      <div class="pan" style="margin-top:14px"><h3 style="margin-top:0">Decision log</h3><ul class="log" id="slog"></ul></div>
+    </div>
+  </div>
+</div></section>
+
+<section data-v="method" class="band"><div class="wrap grid2">
+  <div>
+    <h2>Why these channels earn trust</h2>
+    <div class="scroll"><table><thead><tr><th class="n">Day</th><th>Channel</th><th>Tiers</th><th>Why it earns trust</th></tr></thead><tbody id="seq"></tbody></table></div>
+    <h3>Scoring (100 points)</h3>
+    <div class="scroll"><table><thead><tr><th>Block</th><th>Signals</th><th>Why</th></tr></thead><tbody>
+      <tr><td>Fit 35</td><td>Segment, cardiologists at the practice, number of sites</td><td>Owner-run practices decide in one meeting; systems buy centrally and go to an enterprise AE.</td></tr>
+      <tr><td>Need 35</td><td>Limited-English households at the practice ZIP, service line, one dominant language</td><td>Multilingual patient education is FlocCare's sharpest edge, and NYC is half non-English at home.</td></tr>
+      <tr><td>Timing 10</td><td>Share of cardiologists trained 2010 or later</td><td>Adoption propensity.</td></tr>
+      <tr><td>Reach 20</td><td>Registry-named decision-maker, a distinct clinical champion, direct phone</td><td>A named person and two threads beat a guess.</td></tr>
+    </tbody></table></div>
+  </div>
+  <div>
+    <h2>Sources</h2>
+    <ul>
+      <li>CMS Doctors &amp; Clinicians file (data.cms.gov, mj5m-pzi6): clinicians, specialty, group, size, address, phone</li>
+      <li>NPPES NPI Registry: each organization's authorized official (name, title)</li>
+      <li>Census ACS 2020-24 5-year, table C16002: household language and limited-English households by ZIP</li>
+      <li><a href="https://www.floccare.ai/hypertension-cvd-case">FlocCare hypertension / CVD case study</a>: the proof used in email 3</li>
+      <li>Kessels, J R Soc Med 2003: patients forget 40-80% of what they hear in a visit</li>
+    </ul>
+    <h3>What I'd verify in week one</h3>
+    <ul>
+      <li>Real conversion rates by tier from the first 100 sends; the funnel sheet re-runs from them.</li>
+      <li>Email enrichment (Apollo / Hunter) for the 75: addresses are not in public data.</li>
+      <li>Whether FlocCare can deliver Yiddish, Bengali and Haitian Creole assets before they are offered.</li>
+    </ul>
+  </div>
+</div></section>
+
+<script>
+{
+const EMB = /*__DATA__*/null;
+const go = D => {
+const A = D.accounts, F = D.funnel, R = D.rules;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cs = getComputedStyle(document.documentElement);
+
+/* figures */
+const salesDemo = D.demo.filter(d => d.final_status === "sales_ready").length;
+const nMsgs = A.reduce((s, a) => s + a.msgs.length, 0);
+const tA = A.filter(a => a.tier === "A").length;
+$("figs").innerHTML = [
+  [Object.values(D.routes).reduce((a, b) => a + b, 0), "practices sourced from public registries"],
+  [D.routes.outreach, "eligible for clinic outreach"],
+  [A.length, `in wave 1 (${tA} Tier A, ${A.length - tA} Tier B)`],
+  [nMsgs, "messages written for them"],
+  [`${D.cohort.sales_ready.length}/${A.length}`, "sales-ready in the 25-day cohort run"],
+  [F.months_of_supply_at_target, "months of supply at 75 a month"],
+].map(([b, s]) => `<div class="fg"><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join("");
+$("ti").textContent = D.test_inbox;
+
+/* telemetry strip */
+const strip = $("strip");
+const drawStrip = () => {
+  const W = strip.clientWidth, H = strip.clientHeight, L = W < 520 ? 84 : 190, Rm = W < 520 ? 70 : 120, T = 18, B = 30;
+  const d0 = -7, d1 = 25, x = d => L + (d - d0) / (d1 - d0) * (W - L - Rm);
+  const lane = (H - T - B) / D.demo.length;
+  let s = "";
+  for (let d = d0; d <= d1; d += (W < 520 ? 7 : 7)) s += `<line x1="${x(d)}" x2="${x(d)}" y1="${T}" y2="${H - B}" stroke="var(--g2)"/><text x="${x(d)}" y="${H - 10}" text-anchor="middle">Day ${d}</text>`;
+  D.demo.forEach((dm, i) => {
+    const y = T + lane * (i + .62);
+    const SH = {click_then_call: ["Clicks, then takes the call", "Click + call"], hot_opens_then_qr: ["Hot opens, then QR scan", "Opens + QR"], silence: ["Total silence", "Silence"], objection_then_yes: ["Objection, then yes", "Objection"], referral: ["Refers to office manager", "Referral"], not_now: ["Not now", "Not now"], ooo_and_bounce: ["Out of office + bounce", "OOO+bounce"], unsubscribe: ["Asks to be removed", "Remove me"]}[dm.key] || [dm.title, dm.key];
+    const name = W < 520 ? SH[1] : SH[0];
+    s += `<g class="ln" data-k="${dm.key}" style="cursor:pointer"><rect x="0" y="${T + lane * i}" width="${W}" height="${lane}" fill="transparent"/>`;
+    s += `<text x="8" y="${y + 4}">${esc(name)}</text>`;
+    const end = dm.sales_ready_day ?? (dm.final_status === "nurture" ? 21 : (dm.timeline.filter(e => e.kind !== "touch").slice(-1)[0] || {day: 1}).day);
+    let path = `M${x(d0)},${y}`;
+    const ev = dm.timeline.filter(e => e.kind === "event");
+    ev.forEach(e => { const xx = x(e.day); path += ` L${xx - 5},${y} L${xx - 2},${y - lane * .38} L${xx + 2},${y + lane * .18} L${xx + 5},${y}`; });
+    path += ` L${x(end)},${y}`;
+    s += `<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-linejoin="round"/>`;
+    dm.timeline.filter(e => e.kind === "touch").forEach(e => s += `<rect x="${x(e.day) - 2}" y="${y + 4}" width="4" height="${Math.max(6, lane * .2)}" fill="var(--blue)"/>`);
+    ev.forEach(e => s += `<circle cx="${x(e.day)}" cy="${y - lane * .38}" r="3" fill="var(--red)"/>`);
+    const ex = x(end) + 10, lab = {sales_ready: `sales-ready D${dm.sales_ready_day}`, nurture: "nurture", snoozed: "snoozed", suppressed: "suppressed"}[dm.final_status] || dm.final_status;
+    const mark = dm.final_status === "sales_ready" ? `<circle cx="${x(end)}" cy="${y}" r="6" fill="var(--red)"/>` : dm.final_status === "suppressed" ? `<text x="${x(end)}" y="${y + 5}" text-anchor="middle" style="font-size:18px">&times;</text>` : `<circle cx="${x(end)}" cy="${y}" r="6" fill="var(--bg)" stroke="var(--ink)"/>`;
+    s += mark + `<text x="${ex}" y="${y + 4}" style="font-weight:600;fill:${dm.final_status === "sales_ready" ? "var(--red)" : "var(--ink)"}">${esc(W < 520 ? lab.replace("sales-ready ", "SR ") : lab)}</text></g>`;
+  });
+  strip.innerHTML = `<svg>${s}</svg>`;
+  strip.querySelectorAll(".ln").forEach(g => g.addEventListener("click", () => { location.hash = "demo"; showDemo(g.dataset.k); }));
+};
+const roStrip = new ResizeObserver(drawStrip); roStrip.observe(strip);
+
+/* overview */
+const stepsN = A.reduce((s, a) => s + a.msgs.length, 0);
+$("pipe").innerHTML = [
+  ["Source", `CMS clinician file + NPPES registry + Census ACS. ${D.universe_listings_manhattan} cardiology listings in Manhattan alone; hospital systems filtered to an enterprise route.`],
+  ["Enrich", "One account per practice. Decision-maker from the NPPES authorized official, else the owner named on the entity; champion = most recently trained cardiologist. One person, one sequence."],
+  ["Prioritize", "100-point score (fit, need, timing, reach) with a written reason per clinic; tiers decide channel depth."],
+  ["Engage", `${stepsN} messages for the 75: ads audience, LinkedIn, email, phone, printed mail. The offer is a free one-page handout in their patients' languages.`],
+  ["React", "Opens barely count (Apple Mail Privacy Protection). Clicks, scans and replies change the plan; silence escalates the channel."],
+  ["Surface", "Sales-ready on a yes, on engagement >= 35 for Tier A/B, or when two people at a practice engage. The AE gets the reason and a draft."],
+].map(([k, v]) => `<tr><td style="width:7em"><b class="c">${k}</b></td><td>${esc(v)}</td></tr>`).join("");
+const fb = [["Independent practices, first pass", F.expected_pass1], ["Hospital-system sites (enterprise)", F.expected_health_system], ["Recycle at 90 days", F.expected_recycle_pass], ["Referrals", F.expected_referrals], ["Whole market", F.total_reachable_conversations], ["Target, every month", F.target_per_month]];
+const fmax = Math.max(...fb.map(r => r[1]));
+$("fbars").innerHTML = fb.map(([k, v], i) => `<div class="r"><span>${k}</span><div class="t"><i style="width:${v / fmax * 100}%;background:${i === 5 ? "var(--red)" : i === 4 ? "var(--ink)" : "var(--blue)"}"></i></div><span class="c" style="text-align:right">${Math.round(v)}</span></div>`).join("");
+$("fverdict").textContent = F.verdict + ` Assumptions: P(conversation) A ${F.p_by_tier.A * 100}%, B ${F.p_by_tier.B * 100}%, C ${F.p_by_tier.C * 100}%; all editable in the Funnel sheet.`;
+
+/* clinics */
+let sel = A[0].id, mtab = 0;
+const rowHTML = a => { const s = a.sub; return `<tr class="pick ${a.id === sel ? "sel" : ""}" data-id="${a.id}"><td class="n">${a.rank}</td><td>${esc(a.practice)}<div class="meta">${esc(a.dm)}</div></td><td><span class="tier ${a.tier}">${a.tier}</span></td><td class="n"><b>${a.score}</b></td><td class="hide-s"><div class="sbar"><i class="k1" style="width:${s.fit}%"></i><i class="k2" style="width:${s.need}%"></i><i class="k3" style="width:${s.timing}%"></i><i class="k4" style="width:${s.reach}%"></i></div></td><td class="hide-s">${esc(a.hood)}<div class="meta">${esc(a.lang || "English")}${a.lep != null ? ` · ${Math.round(a.lep)}% LEP` : ""}</div></td></tr>`; };
+const renderRows = () => { const q = $("q").value.toLowerCase(); $("rows").innerHTML = A.filter(a => !q || JSON.stringify([a.practice, a.hood, a.lang, a.dm, a.champ, a.borough]).toLowerCase().includes(q)).map(rowHTML).join(""); };
+const renderDetail = () => {
+  const a = A.find(x => x.id === sel), s = a.sub;
+  const all = [...a.msgs.map(m => ({lab: `D${m.day} ${m.channel.replace("_", " ")}`, ...m})), ...Object.entries(a.reactive).map(([k, v]) => ({lab: `on ${k.replace(/_/g, " ")}`, step: k, channel: "reactive", to_name: "", to_role: "", condition: "sent only if that happens", ...v}))];
+  mtab = Math.min(mtab, all.length - 1);
+  const m = all[mtab];
+  $("detail").innerHTML = `<h3 style="margin-top:0">${esc(a.practice)} <span class="tier ${a.tier}">${a.tier}</span></h3>
+  <div class="meta">${esc(a.segment)} · ${esc(a.site)} · ${a.sites} site(s) · ${a.cards} cardiologist(s) · ${esc(a.phone || "no listed phone")}</div>
+  <p><b class="c">Score ${a.score}</b> = fit ${s.fit} + need ${s.need} + timing ${s.timing} + reach ${s.reach}. ${esc(a.reason)}.</p>
+  <p><b class="c">Decision-maker</b> ${esc(a.dm)}, ${esc(a.dm_title)} <span class="meta">(${esc(a.dm_src)})</span><br><b class="c">Clinical champion</b> ${esc(a.champ)}<br><b class="c">Offer</b> "${esc(a.topic)}"${a.lang ? ` in ${esc(a.lang)} and English` : ""}</p>
+  <div class="tabs">${all.map((x, i) => `<button class="${i === mtab ? "on" : ""}" data-t="${i}">${esc(x.lab)}</button>`).join("")}</div>
+  <div class="meta">${m.to_name ? `To: ${esc(m.to_name)} (${esc(m.to_role)}) · ` : ""}${m.condition ? esc(m.condition) + " · " : ""}emails are delivered to the test inbox only</div>
+  <div class="msg"><b>${esc(m.subject)}</b>\n\n${esc(m.body)}</div>`;
+  $("detail").querySelectorAll("[data-t]").forEach(b => b.onclick = () => { mtab = +b.dataset.t; renderDetail(); });
+};
+$("rows").addEventListener("click", e => { const tr = e.target.closest("tr[data-id]"); if (!tr) return; sel = tr.dataset.id; renderRows(); renderDetail(); });
+$("q").addEventListener("input", renderRows);
+renderRows(); renderDetail();
+
+/* demo */
+const showDemo = k => {
+  const d = D.demo.find(x => x.key === k) || D.demo[0];
+  $("dtabs").querySelectorAll("button").forEach(b => b.classList.toggle("on", b.dataset.k === d.key));
+  $("dhead").innerHTML = `<h3 style="margin-top:0">${esc(d.title)}</h3><div class="meta">${esc(d.practice)} · Tier ${d.tier} · score ${d.score} · final status <b>${esc(d.final_status.replace("_", "-"))}</b></div>${d.sales_ready_reason ? `<p style="color:var(--red)"><b>Sales-ready Day ${d.sales_ready_day}:</b> ${esc(d.sales_ready_reason)}</p>` : ""}`;
+  $("dlog").innerHTML = d.timeline.map(e => `<li><span class="d">D${e.day}</span><span class="kind ${e.kind}">${e.kind}</span><span>${esc(e.text)}</span></li>`).join("");
+};
+$("dtabs").innerHTML = D.demo.map(d => `<button data-k="${d.key}">${esc(d.title.split(",")[0].split("(")[0].slice(0, 30))}</button>`).join("");
+$("dtabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) showDemo(b.dataset.k); });
+showDemo(D.demo[0].key);
+const sc = D.cohort.status_counts;
+$("cttl").textContent = `Cohort run: all ${A.length} clinics with seeded random behavior`;
+$("ctext").textContent = `${D.cohort.sales_ready.length} sales-ready, ${sc.nurture || 0} to nurture, ${sc.snoozed || 0} snoozed, ${sc.suppressed || 0} suppressed after 25 days. That ${Math.round(D.cohort.conversations_rate * 100)}% matches the tier assumptions, which is the point: the funnel math holds when the engine actually runs.`;
+
+/* simulator: a faithful port of engine/reactor.py for one account */
+let S;
+const reset = () => {
+  const a = A.find(x => x.id === $("sacc").value);
+  S = {a, day: -8, status: "active", eng: 0, ledger: [], clicked: false, opens: [], engaged: new Set(), li: false, emailOk: true, last: null, sig: 0, log: [], lastMsg: null,
+    steps: a.msgs.map(m => ({...m, status: "planned"}))};
+  advance(0);
+};
+const log = (kind, text) => S.log.push({day: S.day, kind, text});
+const send = (m, scheduled = true) => {
+  S.lastMsg = {...m, day: S.day};
+  log("touch", `${m.channel === "email" || m.channel === "reactive" ? "EMAIL" : m.channel.toUpperCase().replace("_", " ")} '${m.subject}'${m.to_name ? " -> " + m.to_name : ""}${m.channel === "email" || m.channel === "reactive" ? " (test inbox)" : ""}`);
+  if (scheduled) { S.last = S.day; S.sig = 0; }
+};
+const due = () => {
+  if (S.status !== "active") return;
+  for (const s of S.steps) {
+    if (s.status !== "planned" || s.day > S.day) continue;
+    if (s.condition === "skip if clicked" && S.clicked) { s.status = "skipped"; log("decision", `Skipped ${s.step}: they already clicked.`); continue; }
+    if (s.condition === "linkedin_connected" && !S.li) { s.status = "skipped"; log("decision", `Skipped ${s.step}: LinkedIn not accepted.`); continue; }
+    if (s.channel === "email" && !S.emailOk) { s.status = "skipped"; log("decision", `Skipped ${s.step}: email bounced; phone and mail carry it.`); continue; }
+    if (S.last !== null && S.last < S.day && S.sig === 0 && s.day >= 2) log("decision", `Silence since Day ${S.last}. Next touch switches to ${s.channel.replace("_", " ")}.`);
+    send(s); s.status = "sent";
+  }
+  if (S.status === "active" && S.steps.every(s => s.status !== "planned") && S.day >= 21) { S.status = "nurture"; log("decision", `Sequence done with no reply: nurture, re-enter Day ${S.day + 90}.`); }
+};
+const advance = to => { while (S.day < to) { S.day++; due(); } render(); };
+const planned = () => S.steps.filter(s => s.status === "planned");
+const react = (type, payload = {}) => {
+  let et = type;
+  if (S.status === "suppressed") { log("decision", "Suppressed: event recorded, no action."); return render(); }
+  const pts = R.engagement_points[et] || 0; S.eng += pts; if (pts) S.ledger.push(et);
+  log("event", payload.label || et.replace(/_/g, " "));
+  if (S.status === "sales_ready") { log("decision", "Already with the AE: activity forwarded, automation stays off."); return render(); }
+  if (!["bounce", "out_of_office", "reply_unsubscribe"].includes(et)) S.sig++;
+  if (et === "email_open") S.opens.push(S.day);
+  if (["link_click", "qr_scan", "reply_positive", "reply_referral", "reply_has_materials", "call_interested", "linkedin_reply"].includes(et)) S.engaged.add(payload.who || "decision-maker");
+  if (et === "link_click") S.clicked = true;
+  for (const r of R.reactions[et] || []) {
+    if (r.when === "hot_opens" && S.opens.filter(d => d > S.day - R.hot_opens.window_days).length < R.hot_opens.count) continue;
+    log("decision", r.why);
+    for (const act of r.do) {
+      const [n, arg] = act.split(":");
+      const pl = planned();
+      if (n === "send") { const t = S.a.reactive[arg]; send({channel: "reactive", step: arg, subject: t.subject, body: t.body, to_name: payload.who || S.a.dm}, false); }
+      else if (n === "task") { if (arg === "call_next_business_day") { if (pl.some(s => s.channel === "phone" && s.day <= S.day + 1)) log("action", "Call already queued; kept it."); else { const c = S.a.msgs.find(m => m.channel === "phone"); if (c) { S.steps.push({...c, step: "call_hot", day: S.day + 1, status: "planned"}); log("action", `Added a human call for Day ${S.day + 1}.`); } } } else log("action", "Task: reply personally today."); }
+      else if (n === "pull_forward_call") { const c = pl.filter(s => s.channel === "phone").sort((a, b) => a.day - b.day)[0]; if (c && c.day > S.day + 1) { log("action", `Pulled ${c.step} from Day ${c.day} to Day ${S.day + 1}.`); c.day = S.day + 1; } }
+      else if (n === "skip") pl.filter(s => s.step === arg).forEach(s => { s.status = "skipped"; log("action", `Cancelled ${arg}.`); });
+      else if (n === "unlock") { S.li = true; log("action", "LinkedIn message unlocked."); }
+      else if (n === "stop_sequence") { pl.forEach(s => s.status = "cancelled"); log("action", `Stopped automation (${pl.length} steps cancelled).`); }
+      else if (n === "mark_sales_ready") salesReady("explicit interest");
+      else if (n === "add_contact") log("action", `Added contact ${payload.ref || "from reply/call"}.`);
+      else if (n === "pause") { pl.forEach(s => s.day += +arg); log("action", `Paused ${arg} days; remaining steps shifted.`); }
+      else if (n === "snooze") { pl.forEach(s => s.status = "cancelled"); S.status = "snoozed"; log("action", `Snoozed until Day ${S.day + +arg}.`); }
+      else if (n === "suppress") { S.status = "suppressed"; log("action", "Suppressed on every channel."); }
+      else if (n === "shift_schedule") { const d = 8 - S.day > 0 ? 8 - S.day : 7; pl.forEach(s => s.day += d); log("action", `Out of office: shifted ${pl.length} steps by ${d} days.`); }
+      else if (n === "mark_email_invalid") { S.emailOk = false; log("action", "Email marked invalid; re-enrich contact."); }
+    }
+  }
+  const sr = R.sales_ready;
+  if (!["sales_ready", "suppressed", "snoozed"].includes(S.status)) {
+    if (S.eng >= sr.engagement_threshold && sr.eligible_tiers.includes(S.a.tier)) salesReady(`engagement ${S.eng} >= ${sr.engagement_threshold} on Tier ${S.a.tier}`);
+    else if (S.engaged.size >= sr.multi_thread_contacts) salesReady(`${S.engaged.size} people engaged`);
+  }
+  render();
+};
+const salesReady = why => {
+  if (S.status === "sales_ready") return;
+  planned().forEach(s => s.status = "cancelled"); S.status = "sales_ready";
+  const t = S.a.reactive.ae_handoff;
+  S.lastMsg = {channel: "internal", subject: t.subject, body: t.body.replace(/Why now: .*/, "Why now: " + why), to_name: "AE (#gtm-sales-ready)", day: S.day};
+  log("surface", `SALES-READY -> AE alerted: ${why}.`);
+};
+const EV = [["email_open", "Opens email"], ["link_click", "Clicks sample"], ["qr_scan", "Scans mailed QR"], ["linkedin_accept", "Accepts LinkedIn"],
+  ["reply_positive", "Replies: yes"], ["reply_referral", "Replies: talk to our office manager", {who: "Office manager", ref: "Office manager"}], ["reply_has_materials", "Replies: we have handouts"],
+  ["reply_not_now", "Replies: not now"], ["reply_unsubscribe", "Replies: remove me"], ["out_of_office", "Auto-reply: out of office"], ["bounce", "Email bounces"],
+  ["call_gatekeeper", "Front desk gives a name", {ref: "Office manager"}], ["call_interested", "Interested on the phone"]];
+$("evb").innerHTML = EV.map(([k, l], i) => `<button data-i="${i}">${l}</button>`).join("");
+$("evb").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; const [k, l, p] = EV[+b.dataset.i]; react(k, {label: l, ...(p || {})}); });
+const render = () => {
+  $("sstat").textContent = S.status.replace("_", "-"); $("sstat").style.color = S.status === "sales_ready" ? "var(--red)" : "";
+  $("sday").textContent = S.day; $("seng").textContent = S.eng;
+  $("smeter").style.width = Math.min(100, S.eng / 50 * 100) + "%"; $("sthr").style.left = (35 / 50 * 100) + "%";
+  $("ssteps").innerHTML = [...S.steps].sort((a, b) => a.day - b.day).map(s => `<li><span class="d c">D${s.day}</span><span class="ch meta">${s.channel.replace("_", " ")}</span><span>${esc(s.step)}</span><span class="st ${s.status}">${s.status}</span></li>`).join("");
+  $("slog").innerHTML = [...S.log].reverse().map(e => `<li><span class="d">D${e.day}</span><span class="kind ${e.kind}">${e.kind}</span><span>${esc(e.text)}</span></li>`).join("");
+  const m = S.lastMsg;
+  $("slast").innerHTML = m ? `<div class="meta">Day ${m.day} · ${esc(m.to_name || "")} · ${m.channel === "internal" ? "internal alert" : m.channel === "email" || m.channel === "reactive" ? "delivered to test inbox" : "task for a human / API"}</div><div class="msg"><b>${esc(m.subject)}</b>\n\n${esc(m.body)}</div>` : "Nothing yet.";
+};
+$("sacc").innerHTML = A.map(a => `<option value="${a.id}">#${a.rank} ${esc(a.practice)} (Tier ${a.tier})</option>`).join("");
+$("sacc").onchange = reset; $("sreset").onclick = reset;
+$("d1").onclick = () => advance(S.day + 1); $("d3").onclick = () => advance(S.day + 3); $("dend").onclick = () => advance(25);
+reset();
+
+/* method */
+const why = {ads_audience: "Familiarity before any ask: they see the name on LinkedIn and Instagram next to free, useful content.", li_connect: "A no-pitch connection to the champion; a face before an email.",
+  email_1: "Give first: a free one-page handout in their patients' languages, with their name on it. No patient data, no login, an easy no.", email_champion: "Asks a clinician for critique rather than a meeting; respects expertise.",
+  call_1: "Small practices run on the phone. Goal is a name and a mailing address, not a pitch.", email_2_bump: "Two lines, only if they haven't clicked.",
+  mail_1: "Printed copies on the doctor's desk: tangible, rare, and it passes the front desk.", li_message: "Only if they accepted; references the packet.",
+  email_3_proof: "First explicit ask, backed by a cardiology case study, framed honestly.", call_2: "Did the packet arrive? Book on the spot.", email_4_close: "A respectful close plus an opt-in, not a newsletter they never asked for."};
+$("seq").innerHTML = D.steps.map(s => `<tr><td class="n">${s.day}</td><td>${s.channel.replace("_", " ")}</td><td>${s.tiers.join(" ")}</td><td>${esc(why[s.id] || "")}</td></tr>`).join("");
+
+/* routing */
+const route = () => { const v = (location.hash || "#overview").slice(1); const ok = ["overview", "clinics", "demo", "simulator", "method"].includes(v) ? v : "overview";
+  document.querySelectorAll("section[data-v]").forEach(s => s.classList.toggle("on", s.dataset.v === ok));
+  document.querySelectorAll("#nav a").forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + ok)); };
+addEventListener("hashchange", route); route();
+};
+if (EMB) go(EMB); else fetch("data.json").then(r => r.json()).then(go).catch(e => { document.getElementById("lede").textContent = "Could not load data.json: " + e; });
+}
+</script>
+</body>
+</html>

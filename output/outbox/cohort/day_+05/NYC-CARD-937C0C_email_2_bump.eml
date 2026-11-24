@@ -1,0 +1,19 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Re: Spanish/Bengali + English home blood-pressure sheet for
+ Dr. Hasan's patients
+Date: Mon, 23 Nov 2026 22:52:25 -0800
+X-Intended-Recipient: Choudhury Hasan <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-937C0C
+X-FlocCare-Step: email_2_bump
+X-FlocCare-Day: 5
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Hasan, the full Spanish and Bengali version is ready if you want it. Repl=
+y "yes" and I'll send the print-ready file, or have a look first: https://git=
+hub.com/xbartlett1361/floccare-gtm-engine/blob/main/samples/home-blood-pressu=
+re.md?ref=3D937c0c-e2
+
+Xander Bartlett

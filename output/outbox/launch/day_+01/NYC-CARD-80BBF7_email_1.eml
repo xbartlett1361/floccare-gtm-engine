@@ -1,0 +1,34 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Spanish/Polish + English PAD walking-plan sheet for Long
+ Island Heart and Vascular Specialist patients
+Date: Mon, 23 Nov 2026 22:52:24 -0800
+X-Intended-Recipient: Karthik Gujja <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-80BBF7
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Gujja,
+
+Around 62% of households near your Myrtle Ave office speak a language other t=
+han English at home, many of them Spanish and Polish (Census ACS 2020-24). Re=
+search suggests patients forget 40 to 80% of what they hear in a visit almost=
+ immediately (Kessels, J R Soc Med, 2003), so the take-home sheet does a lot =
+of the work.
+
+So we made Long Island Heart and Vascular Specialist a one-page "Leg pain whe=
+n you walk: what PAD is and your walking plan" handout in Spanish, Polish and=
+ English, with your practice name on top. Plain language, and no patient data=
+ involved: https://github.com/xbartlett1361/floccare-gtm-engine/blob/main/sam=
+ples/pad-walking-plan.md?ref=3D80bbf7-e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.

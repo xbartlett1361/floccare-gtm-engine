@@ -1,0 +1,13 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] hello
+Date: Mon, 23 Nov 2026 22:52:27 -0800
+X-Intended-Recipient: Dr. Real Person <real.doctor@realclinic.com>
+X-FlocCare-Account: T1
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+
+x

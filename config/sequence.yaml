@@ -1,0 +1,180 @@
+# Trust-first sequence. Day 0 = launch. Negative days = familiarity before any ask.
+# Tier decides which steps run. Personalization lives in the variables; clinical content
+# lives in pre-reviewed sample assets (one per topic x language), so nothing medical is
+# improvised per clinic.
+
+steps:
+  - {id: ads_audience,   day: -7, channel: ads,         audience: account,         tiers: [A, B, C], template: ads_audience}
+  - {id: li_connect,     day: -5, channel: linkedin,    audience: champion_or_dm,  tiers: [A, B],    template: li_connect}
+  - {id: email_1,        day: 1,  channel: email,       audience: dm,              tiers: [A, B, C], template: email_1}
+  - {id: email_champion, day: 2,  channel: email,       audience: champion,        tiers: [A, B],    template: email_champion, requires: distinct_champion}
+  - {id: call_1,         day: 3,  channel: phone,       audience: practice,        tiers: [A, B],    template: call_1}
+  - {id: email_2_bump,   day: 5,  channel: email,       audience: dm,              tiers: [A, B, C], template: email_2_bump, skip_if: clicked}
+  - {id: mail_1,         day: 7,  channel: direct_mail, audience: dm,              tiers: [A],       template: mail_1}
+  - {id: li_message,     day: 9,  channel: linkedin,    audience: champion_or_dm,  tiers: [A, B],    template: li_message, requires: linkedin_connected}
+  - {id: email_3_proof,  day: 12, channel: email,       audience: dm,              tiers: [A, B, C], template: email_3_proof}
+  - {id: call_2,         day: 15, channel: phone,       audience: practice,        tiers: [A],       template: call_2}
+  - {id: email_4_close,  day: 21, channel: email,       audience: dm,              tiers: [A, B, C], template: email_4_close}
+
+templates:
+
+  ads_audience:
+    subject: "Audience sync: {{ practice_label }}"
+    body: |
+      Add to LinkedIn Matched Audience + Meta custom audience "NYC Cardiology Wave {{ wave }}":
+        practice: {{ practice_label }} | {{ street_full }}, {{ zip }}
+        people: {{ dm_name }}{{ ('; ' + champ_name) if has_champion else '' }}
+      Creative shown (no pitch, value only):
+        "Free {{ topic_short }} handout{{ in_lang }}. Plain language, your practice's name on top."
+      Runs Day -7 to Day 21, frequency cap 3/week. Purpose: they've seen the name before the first email lands.
+
+  li_connect:
+    subject: "LinkedIn connection note"
+    body: |
+      Hi {{ li_first }}, I'm Xander from FlocCare. We make patient-education material for clinics. I'm getting to know cardiology practices in {{ borough }} and would be glad to connect. No pitch.
+
+  email_1:
+    subject: "{{ subject_lang }}{{ topic_short }} sheet for {{ for_patients }}"
+    body: |
+      {{ greet }}
+
+      {{ hook }}
+
+      So we made {{ practice }} a one-page "{{ topic }}" handout{{ in_lang }}, with your practice name on top. Plain language, and no patient data involved: {{ link_email1 }}
+
+      If it's useful, I'll send a print-ready file. If not, tell me and I won't follow up.
+
+      {{ sender_block }}
+
+  email_champion:
+    subject: "Would you mark this up? ({{ topic_short }}{{ subject_lang_suffix }})"
+    body: |
+      {{ champ_greet }}
+
+      I'm writing to you rather than the front office because you'd know whether this is any good.
+
+      We drafted a one-page "{{ topic }}" handout for {{ for_patients }}{{ in_lang }}. FlocCare normally builds these per patient from the care plan; this sample needs no patient data. Could you take 30 seconds and tell me what's wrong with it? {{ link_champion }}
+
+      Honest feedback is the whole ask.
+
+      {{ sender_block }}
+
+  call_1:
+    subject: "Call script: front desk to practice manager"
+    body: |
+      DIAL {{ phone }} ({{ practice_label }}, {{ street_full }})
+      GOAL: find who owns patient materials, offer printed copies, get a name and email. No pitch on this call.
+
+      "Hi, this is Xander from FlocCare. I emailed {{ dm_ref }} a free one-page {{ topic_short }} handout{{ in_lang }} with the practice name on it. Who handles patient handouts there, you or the practice manager?"
+      If manager: "Could I mail a few printed copies? Who should I address them to?"
+      If 'send it to the doctor': "Will do. Is email or paper easier for {{ dm_ref }}?"
+      CAPTURE: name, role, email, best time, languages patients ask for most.
+
+      VOICEMAIL (20 sec): "Hi, Xander from FlocCare. I sent {{ dm_ref }} a free one-page {{ topic_short }} handout{{ in_lang }} with the practice name on it. I'll mail a few printed copies this week. {{ sender_phone }}. Thanks."
+
+  email_2_bump:
+    subject: "Re: {{ subject_lang }}{{ topic_short }} sheet for {{ for_patients }}"
+    body: |
+      {{ greet_short }} the full {{ lang_or_plain }}version is ready if you want it. Reply "yes" and I'll send the print-ready file, or have a look first: {{ link_bump }}
+
+      {{ sender_name }}
+
+  mail_1:
+    subject: "Direct mail packet (printed, Lob API)"
+    body: |
+      TO: {{ dm_mail }}{{ (', ' + practice_mail) if practice_mail else '' }}, {{ street_full }}, {{ zip }}
+      PACKET: 3 printed copies of "{{ topic }}"{{ in_lang }}, practice name in the header + a short card + a QR code to the editable version (tracked: {{ link_qr }}).
+
+      CARD TEXT:
+      {{ greet }}
+      I emailed about this last week and figured paper might be easier. Here are three printed copies of a "{{ topic }}" handout{{ in_lang }}, with your practice name on top. Hand them out, toss them, or tell me what to fix.
+      The QR code opens the editable version.
+      Xander, FlocCare · {{ sender_phone }}
+
+  li_message:
+    subject: "LinkedIn message (only after they accept)"
+    body: |
+      Thanks for connecting, {{ li_first }}. I mailed your office a few printed {{ topic_short }} handouts{{ in_lang }} this week. If they help, I can make the same thing for any condition you see a lot of. Either way, glad to be connected.
+
+  email_3_proof:
+    subject: "What the full version looks like for {{ practice }}"
+    body: |
+      {{ greet }}
+
+      The handout is the small version. The full version gives each patient a plan{{ in_their_lang }} by WhatsApp or SMS, with check-ins your staff can see, so nurses spend less time on chase-up calls. Our hypertension case study shows the setup: {{ case_link }}
+
+      Worth 15 minutes to see what it would look like across {{ sites_phrase }}? My calendar: {{ calendar }}. Or reply with a time that suits you.
+
+      {{ sender_block }}
+
+  call_2:
+    subject: "Call script: follow-up on the mailed packet"
+    body: |
+      DIAL {{ phone }}. "Hi, Xander from FlocCare again. I mailed {{ dm_ref }} some printed {{ topic_short }} handouts{{ in_lang }}. Did they arrive? ... Would 15 minutes with {{ dm_ref }} or the practice manager make sense to show how it works for every patient?"
+      If yes: book on the spot ({{ calendar }}). If no: "Understood. Should I send the editable file anyway?"
+
+  email_4_close:
+    subject: "Closing the loop"
+    body: |
+      {{ greet }}
+
+      I'll stop here so I'm not cluttering your inbox. If patient education comes up later, say a new site, new staff or more patients in a new language, just reply to this email.
+
+      One option: we send one free handout template a month. Reply "yes" if you'd like that; otherwise you won't hear from me again.
+
+      {{ sender_block }}
+
+  # ------------------------- reactive templates -------------------------
+  on_click:
+    subject: "Re: {{ subject_lang }}{{ topic_short }} sheet for {{ for_patients }}"
+    body: |
+      {{ greet_short }} thanks for taking a look. Two things I can do this week:
+      1) send the print-ready file{{ in_lang }}, or
+      2) make the same sheet for another condition your patients struggle with.
+      Which would help more?
+
+      {{ sender_name }}
+
+  on_qr:
+    subject: "Glad the printed copies arrived"
+    body: |
+      {{ greet }}
+
+      Looks like the packet made it. Want the editable version for {{ sites_phrase }}? I can also show how it works per patient in 15 minutes: {{ calendar }}
+
+      {{ sender_name }}
+
+  objection_has_materials:
+    subject: "Re: {{ subject_lang }}{{ topic_short }} sheet for {{ for_patients }}"
+    body: |
+      {{ greet_short }} that makes sense; most good practices do. The difference is that ours are built per patient from their plan, in their language, and you can see whether they were read. If you send me one of your current handouts, I'll show you a side-by-side. No commitment.
+
+      {{ sender_name }}
+
+  referral_intro:
+    subject: "{{ dm_ref }} suggested I reach out"
+    body: |
+      Hi {{ ref_first }},
+
+      {{ dm_ref }} mentioned you look after patient materials at {{ practice_3p }}. I made a one-page {{ topic_short }} handout{{ in_lang }} with your practice name on it: {{ link_referral }}
+
+      Want a few printed copies dropped off?
+
+      {{ sender_block }}
+
+  not_now_ack:
+    subject: "Re: {{ subject_lang }}{{ topic_short }} sheet for {{ for_patients }}"
+    body: |
+      {{ greet_short }} understood, thanks for the quick reply. I'll check back in {{ snooze_month }}.
+
+      {{ sender_name }}
+
+  ae_handoff:
+    subject: "SALES-READY: {{ practice_label }} ({{ neighborhood }})"
+    body: |
+      Account: {{ practice_label }} | Tier {{ tier }} | fit score {{ score }}/100
+      Why now: {{ reason }}
+      Who: {{ dm_name }} ({{ dm_title }}){% if has_champion %}; champion {{ champ_name }}{% endif %}
+      Context: {{ n_cardiologists }} cardiologist(s), {{ n_sites }} site(s); patient languages: {{ language or 'mostly English' }}; topic that landed: {{ topic_short }}
+      Suggested first line: "Thanks for looking at the {{ topic_short }} sheet. Want to see how the per-patient version works for your patients?"
+      Book: {{ calendar }}

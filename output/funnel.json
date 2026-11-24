@@ -1,0 +1,31 @@
+{
+  "target_per_month": 75,
+  "independent_accounts": 279,
+  "tiers": {
+    "A": 41,
+    "B": 126,
+    "C": 112
+  },
+  "p_by_tier": {
+    "A": 0.2,
+    "B": 0.11,
+    "C": 0.04
+  },
+  "expected_pass1_by_tier": {
+    "A": 8.2,
+    "B": 13.9,
+    "C": 4.5
+  },
+  "expected_pass1": 26.5,
+  "blended_rate": 0.095,
+  "cms_cardiology_sites_total": 677,
+  "independent_sites": 368,
+  "health_system_sites": 309,
+  "expected_health_system": 15.5,
+  "expected_recycle_pass": 11.6,
+  "expected_referrals": 2.2,
+  "total_reachable_conversations": 55.8,
+  "months_of_supply_at_target": 0.7,
+  "accounts_needed_per_month_at_blended_rate": 789,
+  "verdict": "Working every independent NYC cardiology practice once yields about 27 first conversations; adding hospital-system sites, a 90-day recycle and referrals brings the whole market to about 56. That is 0.7 months of a 75/month target. Hitting 75 every month needs about 789 fresh accounts a month at the blended rate, so the same engine has to widen: cardiometabolic-adjacent specialties in NYC (endocrinology, nephrology), then metro cardiology (Long Island, Westchester, North Jersey)."
+}

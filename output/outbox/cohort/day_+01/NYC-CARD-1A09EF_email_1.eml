@@ -1,0 +1,34 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Spanish/Punjabi + English home blood-pressure sheet for
+ Associated Cardiology Consultant patients
+Date: Mon, 23 Nov 2026 22:52:24 -0800
+X-Intended-Recipient: Shaik Ali <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-1A09EF
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Ali,
+
+Around 47% of households near your Lefferts Blvd office speak a language othe=
+r than English at home, many of them Spanish and Punjabi (Census ACS 2020-24)=
+. Research suggests patients forget 40 to 80% of what they hear in a visit al=
+most immediately (Kessels, J R Soc Med, 2003), so the take-home sheet does a =
+lot of the work.
+
+So we made Associated Cardiology Consultant a one-page "Checking your blood p=
+ressure at home" handout in Spanish, Punjabi and English, with your practice =
+name on top. Plain language, and no patient data involved: https://github.com=
+/xbartlett1361/floccare-gtm-engine/blob/main/samples/home-blood-pressure.md?r=
+ef=3D1a09ef-e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.

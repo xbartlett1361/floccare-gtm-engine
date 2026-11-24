@@ -1,0 +1,32 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Russian/Chinese + English home blood-pressure sheet for Dr.
+ Carrera's patients
+Date: Mon, 23 Nov 2026 22:52:25 -0800
+X-Intended-Recipient: Rosemarie Carrera <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-7C34D5
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Carrera,
+
+About 27% of households near your E 13th St office have limited English, and =
+many speak Russian and Chinese at home (Census ACS 2020-24). When the take-ho=
+me instructions are only in English, a lot of what's said in the visit gets l=
+ost.
+
+So we made your practice a one-page "Checking your blood pressure at home" ha=
+ndout in Russian, Chinese and English, with your practice name on top. Plain =
+language, and no patient data involved: https://github.com/xbartlett1361/floc=
+care-gtm-engine/blob/main/samples/home-blood-pressure.md?ref=3D7c34d5-e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.

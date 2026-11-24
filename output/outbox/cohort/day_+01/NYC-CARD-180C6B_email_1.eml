@@ -1,0 +1,32 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Chinese + English PAD walking-plan sheet for Harmony
+ Cardiovascular Care patients
+Date: Mon, 23 Nov 2026 22:52:24 -0800
+X-Intended-Recipient: Wei Li <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-180C6B
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Li,
+
+About 49% of households near your B 41st Rd office have limited English, and =
+many speak Chinese at home (Census ACS 2020-24). When the take-home instructi=
+ons are only in English, a lot of what's said in the visit gets lost.
+
+So we made Harmony Cardiovascular Care a one-page "Leg pain when you walk: wh=
+at PAD is and your walking plan" handout in Chinese and English, with your pr=
+actice name on top. Plain language, and no patient data involved: https://git=
+hub.com/xbartlett1361/floccare-gtm-engine/blob/main/samples/pad-walking-plan.=
+md?ref=3D180c6b-e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.

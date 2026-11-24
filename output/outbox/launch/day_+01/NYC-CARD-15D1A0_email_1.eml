@@ -1,0 +1,33 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Spanish + English diabetes-and-heart sheet for your patients
+Date: Mon, 23 Nov 2026 22:52:24 -0800
+X-Intended-Recipient: Hemant Patel <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-15D1A0
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Patel,
+
+Around 38% of households near your Adam Clayton Powell Jr Blvd office speak a=
+ language other than English at home, many of them Spanish (Census ACS 2020-2=
+4). Research suggests patients forget 40 to 80% of what they hear in a visit =
+almost immediately (Kessels, J R Soc Med, 2003), so the take-home sheet does =
+a lot of the work.
+
+So we made your practice a one-page "Diabetes and your heart: five things to =
+do this month" handout in Spanish and English, with your practice name on top=
+. Plain language, and no patient data involved: https://github.com/xbartlett1=
+361/floccare-gtm-engine/blob/main/samples/diabetes-and-heart.md?ref=3D15d1a0-=
+e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.

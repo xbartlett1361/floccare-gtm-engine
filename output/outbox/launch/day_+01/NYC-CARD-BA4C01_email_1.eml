@@ -1,0 +1,32 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Chinese/Spanish + English home blood-pressure sheet for T C
+ Cardiology patients
+Date: Mon, 23 Nov 2026 22:52:24 -0800
+X-Intended-Recipient: Thomas Chen <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-BA4C01
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Chen,
+
+About 40% of households near your Prince St office have limited English, and =
+many speak Chinese and Spanish at home (Census ACS 2020-24). When the take-ho=
+me instructions are only in English, a lot of what's said in the visit gets l=
+ost.
+
+So we made T C Cardiology a one-page "Checking your blood pressure at home" h=
+andout in Chinese, Spanish and English, with your practice name on top. Plain=
+ language, and no patient data involved: https://github.com/xbartlett1361/flo=
+ccare-gtm-engine/blob/main/samples/home-blood-pressure.md?ref=3Dba4c01-e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.

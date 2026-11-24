@@ -1,0 +1,9 @@
+pandas>=2.0
+openpyxl>=3.1
+Jinja2>=3.1
+PyYAML>=6.0
+requests>=2.31
+pytest>=7
+# optional, only for guardrail.mode=gmail_drafts:
+# google-api-python-client
+# google-auth

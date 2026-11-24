@@ -1,0 +1,19 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Re: Russian/Chinese + English home blood-pressure sheet for
+ Dr. Ahmed's patients
+Date: Mon, 23 Nov 2026 22:52:25 -0800
+X-Intended-Recipient: Shahed Ahmed <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-C3C766
+X-FlocCare-Step: email_2_bump
+X-FlocCare-Day: 5
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Ahmed, the full Russian and Chinese version is ready if you want it. Repl=
+y "yes" and I'll send the print-ready file, or have a look first: https://git=
+hub.com/xbartlett1361/floccare-gtm-engine/blob/main/samples/home-blood-pressu=
+re.md?ref=3Dc3c766-e2
+
+Xander Bartlett

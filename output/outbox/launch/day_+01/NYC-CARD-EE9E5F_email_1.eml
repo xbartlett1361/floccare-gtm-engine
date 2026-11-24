@@ -1,0 +1,31 @@
+From: Xander Bartlett <gtm-sandbox@floccare.ai>
+To: floccare-test-inbox@example.com
+Subject: [TEST] Spanish + English home blood-pressure sheet for Bronx Heart
+ Medical patients
+Date: Mon, 23 Nov 2026 22:52:24 -0800
+X-Intended-Recipient: Thakor Rana <pending-enrichment>
+X-FlocCare-Account: NYC-CARD-EE9E5F
+X-FlocCare-Step: email_1
+X-FlocCare-Day: 1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+
+Dr. Rana,
+
+About 28% of households near your Grand Concourse office have limited English=
+, and many speak Spanish at home (Census ACS 2020-24). When the take-home ins=
+tructions are only in English, a lot of what's said in the visit gets lost.
+
+So we made Bronx Heart Medical a one-page "Checking your blood pressure at ho=
+me" handout in Spanish and English, with your practice name on top. Plain lan=
+guage, and no patient data involved: https://github.com/xbartlett1361/floccar=
+e-gtm-engine/blob/main/samples/home-blood-pressure.md?ref=3Dee9e5f-e1
+
+If it's useful, I'll send a print-ready file. If not, tell me and I won't fol=
+low up.
+
+Xander Bartlett
+GTM, FlocCare =C2=B7 floccare.ai =C2=B7 (555) 010-0175
+FlocCare, 103 Penang Rd, Singapore 238467 =C2=B7 Reply "stop" and I won't ema=
+il again.
